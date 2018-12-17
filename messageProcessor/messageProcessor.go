@@ -11,7 +11,9 @@ import (
 )
 
 type Config struct {
-	namespaceArg, keynameArg, keyvalueArg string
+	NamespaceArg string `json:"namespaceArg"`
+	KeynameArg   string `json:"keynameArg"`
+	KeyvalueArg  string `json:"keyvalueArg"`
 }
 
 func getConfiguration() Config {
@@ -29,18 +31,20 @@ func LoadConfiguration() Config {
 		fmt.Println(err.Error())
 	}
 	jsonParser := json.NewDecoder(configFile)
-	jsonParser.Decode(&config)
-	log.Printf(config.namespaceArg)
+	err = jsonParser.Decode(&config)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	log.Printf("Namespace: " + config.NamespaceArg)
 	return config
 }
 
 func PollMessages(messageCh chan string) {
-	log.Printf("loading config from config.json")
 	conf := getConfiguration()
 	i := 1
 	log.Printf("Send: %d", i)
 
-	client := asbclient.New(asbclient.Topic, conf.namespaceArg, conf.keynameArg, conf.keyvalueArg)
+	client := asbclient.New(asbclient.Topic, conf.NamespaceArg, conf.KeynameArg, conf.KeyvalueArg)
 	client.SetSubscription("stateSubscription")
 
 	for {

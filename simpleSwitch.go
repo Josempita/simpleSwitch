@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"simpleSwitch/messageProcessor"
 	"time"
+
+	"github.com/Josempita/simpleSwitch/messageProcessor"
 
 	"github.com/stianeikeland/go-rpio"
 )
