@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/Josempita/simpleSwitch/messageProcessor"
@@ -20,25 +21,25 @@ var (
 func main() {
 
 	// Open and map memory to access gpio, check for errors
-	//if err := rpio.Open(); err != nil {
-	//		fmt.Println(err)
-	//os.Exit(1)
-	//}
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	// Unmap gpio memory when done
-	//defer rpio.Close()
+	defer rpio.Close()
 
 	// Set pin to output mode
-	//pin.Output()
+	pin.Output()
 
 	//lets just send a signal to show that the service is up
-	//pin.High()
-	//time.Sleep(time.Second / 2)
-	//pin.Low()
-	//time.Sleep(time.Second / 2)
-	//pin.High()
-	//time.Sleep(time.Second / 2)
-	//pin.Low()
+	pin.High()
+	time.Sleep(time.Second / 2)
+	pin.Low()
+	time.Sleep(time.Second / 2)
+	pin.High()
+	time.Sleep(time.Second / 2)
+	pin.Low()
 
 	http.HandleFunc("/switchoff", func(w http.ResponseWriter, r *http.Request) {
 
