@@ -1,6 +1,8 @@
 package messageProcessor
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -8,19 +10,34 @@ import (
 	"github.com/michaelbironneau/asbclient"
 )
 
-type config struct {
+type Config struct {
 	namespaceArg, keynameArg, keyvalueArg string
 }
 
-func getConfiguration() config {
-	conf := config{namespaceArg: os.Args[1], keynameArg: os.Args[2], keyvalueArg: os.Args[3]}
+func getConfiguration() Config {
+	conf := LoadConfiguration()
+	//conf := Config{namespaceArg: os.Args[1], keynameArg: os.Args[2], keyvalueArg: os.Args[3]}
 	return conf
 }
 
-func PollMessages(messageCh chan string) {
+func LoadConfiguration() Config {
+	log.Printf("loading config from config.json")
+	var config Config
+	configFile, err := os.Open("config.json")
+	defer configFile.Close()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	jsonParser := json.NewDecoder(configFile)
+	jsonParser.Decode(&config)
+	log.Printf(config.namespaceArg)
+	return config
+}
 
+func PollMessages(messageCh chan string) {
+	log.Printf("loading config from config.json")
 	conf := getConfiguration()
-	i := 0
+	i := 1
 	log.Printf("Send: %d", i)
 
 	client := asbclient.New(asbclient.Topic, conf.namespaceArg, conf.keynameArg, conf.keyvalueArg)
